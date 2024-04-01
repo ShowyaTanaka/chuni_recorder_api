@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "<4.3,>=4.2"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+mysqlclient = "*"
+python-dotenv = "*"
+pytest-cov = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-mock = "*"
+pytest-django = "*"
+
+[requires]
+python_version = "3.12"
+
+[scripts]
+test = "pytest"

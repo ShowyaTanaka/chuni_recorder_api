@@ -1,0 +1,1 @@
+from chuniscore_recorder.models.user import User
