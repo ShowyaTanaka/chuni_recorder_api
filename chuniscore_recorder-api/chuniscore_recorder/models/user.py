@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.hashers import make_password, check_password
 import hashlib
 
@@ -11,6 +11,7 @@ class User(models.Model):
         db_table = 'users'
 
     @classmethod
+    @transaction.atomic
     def create_user(cls, name, password):
         password_hash = make_password(password)
         cls.objects.create(name=name, password=password_hash)

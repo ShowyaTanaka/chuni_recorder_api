@@ -30,11 +30,17 @@ SECRET_KEY = 'django-insecure-5!lqb$z@)z6x5@0y^(y=e1x7f3-nyn$1ux51_qrvgiquqp@4mo
 DEBUG = False
 
 ALLOWED_HOSTS = []
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
-APPS_DIR = PROJECT_ROOT / "chuniscore_recorder"
-
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'chuniscore_recorder'
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -16,7 +16,7 @@ def main():
         ) from exc
 
     current_path = os.path.dirname(os.path.abspath(__file__))
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chuniscore_recorder-api.config.settings.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.settings")
     sys.path.append(os.path.join(current_path, "chuniscore_recorder"))
 
     execute_from_command_line(sys.argv)
