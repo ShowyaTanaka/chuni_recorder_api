@@ -56,6 +56,8 @@ REST_FRAMEWORK = {
     ]
 }
 
+TOKEN_LIFETIME = timedelta(days=14)
+REFRESH_TOKEN_LIFETIME = timedelta(days=14)
 SIMPLE_JWT = {
     #トークンの時間を5分に設定
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),

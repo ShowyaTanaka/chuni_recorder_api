@@ -10,6 +10,8 @@ djangorestframework-simplejwt = "*"
 mysqlclient = "*"
 python-dotenv = "*"
 pytest-cov = "*"
+djangorestframework-jwt = "*"
+pyjwt = "*"
 
 [dev-packages]
 pytest = "*"

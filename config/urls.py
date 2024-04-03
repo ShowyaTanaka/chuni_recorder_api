@@ -19,5 +19,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('chuniscore_recorder.urls.user')),
+    path('', include('chuniscore_recorder.urls.auth_user')),
 ]
