@@ -6,17 +6,19 @@ name = "pypi"
 [packages]
 django = "<4.3,>=4.2"
 djangorestframework = "*"
-djangorestframework-simplejwt = "*"
 mysqlclient = "*"
 python-dotenv = "*"
 pytest-cov = "*"
 djangorestframework-jwt = "*"
 pyjwt = "*"
+drf-spectacular = "*"
+setuptools = "*"
 
 [dev-packages]
 pytest = "*"
 pytest-mock = "*"
 pytest-django = "*"
+pytest-freezegun = "*"
 
 [requires]
 python_version = "3.12"

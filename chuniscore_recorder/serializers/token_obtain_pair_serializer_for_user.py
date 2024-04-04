@@ -1,13 +1,16 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from chuniscore_recorder.models import User
+from rest_framework import serializers
 
 
-class TokenObtainPairSerializerForUser(TokenObtainPairSerializer):
+class TokenObtainPairSerializerForUser(serializers.Serializer):
 
 
     def validate(self, data):
-        if (data.get('username', None) is None) or (data.get('password', None) is None):
-            raise ValueError('username and password are required.')
-        if not User.get_user_permission(data['username'], data['password']):
-            raise ValueError('username or password is incorrect.')
+        data = self.context['request'].data
+        if (data.get('name', None) is None) or (data.get('password', None) is None):
+            raise serializers.ValidationError('name and password are required.')
+        if not User.get_user_permission(data['name'], data['password']):
+            raise serializers.ValidationError('name or password is incorrect.')
         return super().validate(data)
+

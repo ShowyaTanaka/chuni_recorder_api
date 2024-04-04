@@ -16,8 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # 127.0.0.1/8000/api/schema にアクセスするとテキストファイルをダウンロードできます
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path('docs', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    # Redocの設定
+    # 今回は127.0.0.1/8000/api/redoc にアクセスするとRedocが表示されるよう設定します
+    path(
+        "api/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
+    ),
     path('', include('chuniscore_recorder.urls.auth_user')),
 ]

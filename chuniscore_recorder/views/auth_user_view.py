@@ -6,19 +6,25 @@ from chuniscore_recorder.serializers import TokenObtainPairSerializerForUser
 from datetime import datetime, timedelta
 import jwt
 
+from chuniscore_recorder.utils.auth import JWTTokenVerifyAuthentication
 from config.settings import settings
 
 
-class AuthUserView(APIView):
+class AuthUserView(viewsets.GenericViewSet):
     serializer_class = TokenObtainPairSerializerForUser
+
+    def get_serializer_class(self):
+        if self.action == 'generate_token':
+            return TokenObtainPairSerializerForUser
 
     @action(methods=['post'], detail=False, url_path='login', url_name='login')
     def generate_token(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid(raise_exception=True):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         payload = {'name': serializer.validated_data['name'],
-                   'until': datetime.now() + timedelta(settings.TOKEN_LIFETIME)
+                   'until': (datetime.now() + settings.TOKEN_LIFETIME).timestamp()
                    }
         key = settings.SECRET_KEY
         token = jwt.encode(
@@ -27,7 +33,8 @@ class AuthUserView(APIView):
             algorithm="HS256"
         )
         response = Response()
-        response.set_cookie('token', token)
+        response.set_cookie('token', token.decode())
+        return response
 
     @action(methods=['delete'], detail=False, url_path='logout', url_name='logout')
     def delete_token(self, request, *args, **kwargs):
@@ -41,8 +48,9 @@ class AuthUserView(APIView):
         if token is None:
             return Response({'is_authenticated': False})
         try:
+
             payload = jwt.decode(
-                jwt=token,
+                jwt=str(token),
                 key=settings.SECRET_KEY,
                 algorithms=["HS256"]
             )
@@ -60,7 +68,7 @@ class AuthUserView(APIView):
             return Response({"error": "token is not found."}, status=status.HTTP_400_BAD_REQUEST)
         try:
             payload = jwt.decode(
-                jwt=token,
+                token,
                 key=settings.SECRET_KEY,
                 algorithms=["HS256"]
             )
@@ -69,13 +77,12 @@ class AuthUserView(APIView):
         until = datetime.fromtimestamp(payload['until'])
         if until < datetime.now():
             return Response({"error": "token is expired."}, status=status.HTTP_400_BAD_REQUEST)
-        payload["until"] = datetime.now() + timedelta(settings.TOKEN_LIFETIME)
+        payload["until"] = (datetime.now() + settings.TOKEN_LIFETIME).timestamp()
         token = jwt.encode(
             payload=payload,
             key=settings.SECRET_KEY,
             algorithm="HS256"
         )
         response = Response()
-        response.set_cookie("token", token)
+        response.set_cookie("token", token.decode())
         return response
-

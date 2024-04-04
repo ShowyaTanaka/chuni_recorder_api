@@ -43,38 +43,25 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chuniscore_recorder',
     'rest_framework.authtoken',
-    'djoser'
+    "drf_spectacular",
 ]
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'chuniscore_recorder API',
+    'DESCRIPTION': '詳細',
+    'VERSION': '1.0.0',
+    # api/schemaを表示しない
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 # 追加
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        #Simple JWTを読み込む
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ]
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 TOKEN_LIFETIME = timedelta(days=14)
 REFRESH_TOKEN_LIFETIME = timedelta(days=14)
-SIMPLE_JWT = {
-    #トークンの時間を5分に設定
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=120),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': False,
-    #暗号のアルゴリズム設定
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUTH_HEADER_TYPES': ('JWT',),
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-}
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
