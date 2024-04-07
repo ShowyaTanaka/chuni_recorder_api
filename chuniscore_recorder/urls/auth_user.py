@@ -1,9 +1,14 @@
-from chuniscore_recorder.views.auth_user_view import AuthUserView
+from chuniscore_recorder.views.auth import AuthUserLoginView, AuthUserJWTOperateView, AuthUserCheckView
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 router = SimpleRouter()
-router.register('auth', AuthUserView, basename='auth_user')
+router.register('auth/login', AuthUserLoginView, basename='auth_user_login')
+
+router.register('auth', AuthUserJWTOperateView, basename='auth_user_jwt')
+
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('auth/check/', AuthUserCheckView.as_view()),
+    path('', include(router.urls)),
+
 ]

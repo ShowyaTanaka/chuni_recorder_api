@@ -7,9 +7,10 @@ from datetime import datetime
 
 class JWTTokenVerifyAuthentication(BaseAuthentication):
     def authenticate(self, request):
-        token = request.COOKIES.get('token')
+        token = request.headers.get('Token')
+
         if token is None:
-            return None
+            raise exceptions.AuthenticationFailed('Token is not found.')
         try:
             payload = jwt.decode(
                 jwt=token,

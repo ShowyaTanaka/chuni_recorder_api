@@ -13,6 +13,7 @@ djangorestframework-jwt = "*"
 pyjwt = "*"
 drf-spectacular = "*"
 setuptools = "*"
+django-filter = "*"
 
 [dev-packages]
 pytest = "*"

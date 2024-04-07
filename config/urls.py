@@ -35,4 +35,5 @@ urlpatterns = [
         name="redoc",
     ),
     path('', include('chuniscore_recorder.urls.auth_user')),
+    path('', include('chuniscore_recorder.urls.user_conf')),
 ]
