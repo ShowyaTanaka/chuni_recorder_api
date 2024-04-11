@@ -1,1 +1,6 @@
 from chuniscore_recorder.models.user import User
+from chuniscore_recorder.models.chuni_musics import ChuniMusics
+from chuniscore_recorder.models.chuni_difficulty import ChuniDifficulty
+from chuniscore_recorder.models.chuni_difficulty_rank import ChuniDifficultyRank
+from chuniscore_recorder.models.chuni_genres import ChuniGenres
+from chuniscore_recorder.models.chuni_result import ChuniResult

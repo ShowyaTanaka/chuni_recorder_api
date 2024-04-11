@@ -8,7 +8,7 @@ from datetime import datetime
 import jwt
 from chuniscore_recorder.utils.auth_util import AuthUtilEx
 from chuniscore_recorder.utils.auth_permissions.auth import JWTTokenVerifyAuthentication
-from config.settings import settings
+from config import settings
 
 
 class AuthUserLoginView(viewsets.GenericViewSet, viewsets.mixins.CreateModelMixin):
@@ -18,6 +18,8 @@ class AuthUserLoginView(viewsets.GenericViewSet, viewsets.mixins.CreateModelMixi
 
 
 class AuthUserCheckView(APIView):
+
+    serializer_class = None
 
     def get(self, request, *args, **kwargs):
         token = request.headers.get('Token')

@@ -6,8 +6,6 @@ from rest_framework import serializers
 from rest_framework.response import Response
 
 from chuniscore_recorder.models.proxy.userex import UserEx
-from chuniscore_recorder.views.auth import AuthUserLoginView
-from config.settings import settings
 from chuniscore_recorder.utils.auth_util import AuthUtilEx
 
 

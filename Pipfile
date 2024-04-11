@@ -14,12 +14,14 @@ pyjwt = "*"
 drf-spectacular = "*"
 setuptools = "*"
 django-filter = "*"
+pytest-json-fixtures = "*"
 
 [dev-packages]
 pytest = "*"
 pytest-mock = "*"
 pytest-django = "*"
 pytest-freezegun = "*"
+django-debug-toolbar = "*"
 
 [requires]
 python_version = "3.12"

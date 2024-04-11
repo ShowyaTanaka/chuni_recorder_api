@@ -1,0 +1,30 @@
+[
+  {
+    "model": "chuniscore_recorder.chunimusics",
+    "pk": 1,
+    "fields": {
+      "title": "テスト楽曲1(ULT,WEなし)"
+    }
+  },
+  {
+    "model": "chuniscore_recorder.chunimusics",
+    "pk": 2,
+    "fields": {
+      "title": "テスト楽曲2(WEなし,ULTあり)"
+    }
+  },
+  {
+    "model": "chuniscore_recorder.chunimusics",
+    "pk": 3,
+    "fields": {
+      "title": "テスト楽曲3(WEあり,ULTなし)"
+    }
+  },
+  {
+        "model": "chuniscore_recorder.chunimusics",
+        "pk": 4,
+        "fields": {
+        "title": "テスト楽曲4(WEあり,ULTあり)"
+        }
+  }
+]

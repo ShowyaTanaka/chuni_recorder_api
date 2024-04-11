@@ -2,7 +2,6 @@ import datetime
 import unittest
 from datetime import time
 
-from django.http import SimpleCookie
 from django.test import Client
 from chuniscore_recorder.models.proxy import UserEx
 import pytest

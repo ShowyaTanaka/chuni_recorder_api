@@ -2,7 +2,7 @@ from datetime import datetime
 
 import jwt
 
-from config.settings import settings
+from config import settings
 
 
 class AuthUtilEx:

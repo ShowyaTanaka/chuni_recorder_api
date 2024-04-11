@@ -16,17 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from config import settings
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
+import debug_toolbar  # 追加
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # 127.0.0.1/8000/api/schema にアクセスするとテキストファイルをダウンロードできます
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path('docs', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # Redocの設定
     # 今回は127.0.0.1/8000/api/redoc にアクセスするとRedocが表示されるよう設定します
     path(
@@ -36,4 +38,7 @@ urlpatterns = [
     ),
     path('', include('chuniscore_recorder.urls.auth_user')),
     path('', include('chuniscore_recorder.urls.user_conf')),
+    path('', include('chuniscore_recorder.urls.chuni_musics')),
 ]
+if settings.DEBUG:
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
