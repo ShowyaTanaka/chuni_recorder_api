@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from chuniscore_recorder.models.proxy.userex import UserEx
 from chuniscore_recorder.utils.auth_util import AuthUtilEx
+from chuniscore_recorder.models.proxy.chuniuserex import ChuniUserEx
 
 
 class CreateUserSerializer(serializers.Serializer):
@@ -40,3 +41,13 @@ class CreateUserSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = UserEx.create_user(validated_data['user_name'], validated_data['password'])
         return user
+
+class UpdateChuniUserSerializer(serializers.Serializer):
+    # chuni_userはuserと結びついているため、バリデーションしない(contextで渡す)
+
+    chuni_player_name = serializers.CharField(max_length=20, write_only=True, required=True)
+
+    def update(self, instance, validated_data):
+        user = UserEx.objects.get(name=self.context['user_name'])
+        ChuniUserEx.update_chuni_player_name(user, validated_data['chuni_player_name'])
+        return Response({'message': 'ユーザー情報の更新が完了しました。'}, status=200)

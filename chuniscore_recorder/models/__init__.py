@@ -4,3 +4,4 @@ from chuniscore_recorder.models.chuni_difficulty import ChuniDifficulty
 from chuniscore_recorder.models.chuni_difficulty_rank import ChuniDifficultyRank
 from chuniscore_recorder.models.chuni_genres import ChuniGenres
 from chuniscore_recorder.models.chuni_result import ChuniResult
+from chuniscore_recorder.models.chuni_user import ChuniUser

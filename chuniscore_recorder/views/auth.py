@@ -69,3 +69,8 @@ class AuthUserJWTOperateView(viewsets.GenericViewSet):
         token = AuthUtilEx.create_token(payload['name'])
         response = Response({"token": token})
         return response
+
+    @action(methods=["get"], detail=False)
+    def my_status(self, request, *args, **kwargs):
+        return Response({'name':self.request.user.name,
+                         'chuni_player_name':self.request.user.chuni_user.player_name if self.request.user.chuni_user is not None else None})

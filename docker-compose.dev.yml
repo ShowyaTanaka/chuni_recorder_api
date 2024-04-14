@@ -1,0 +1,20 @@
+version: '3'
+services:
+  app:
+    depends_on:
+      - db
+    container_name: app
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    environment:
+      USER_ID: $${id -u}
+      GROUP_ID: $${id -g}
+      IS_DOCKER: True
+      DB_HOST: db
+    working_dir: /app
+    command: /usr/local/bin/python3 manage.py runserver
+    volumes:
+      - type: bind
+        source: .
+        target: /app

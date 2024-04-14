@@ -14,6 +14,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import os
+
 from django.contrib import admin
 from django.urls import path, include
 from config import settings
@@ -22,7 +24,8 @@ from drf_spectacular.views import (
     SpectacularRedocView,
     SpectacularSwaggerView,
 )
-import debug_toolbar  # 追加
+if settings.DEBUG and os.environ.get("IS_DOCKER", False).lower() != 'true':
+    import debug_toolbar  # 追加
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,5 +43,5 @@ urlpatterns = [
     path('', include('chuniscore_recorder.urls.user_conf')),
     path('', include('chuniscore_recorder.urls.chuni_musics')),
 ]
-if settings.DEBUG:
+if settings.DEBUG and os.environ.get("IS_DOCKER", False).lower() != 'true':
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]

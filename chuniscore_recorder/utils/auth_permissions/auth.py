@@ -3,7 +3,7 @@ from rest_framework import exceptions
 from django.conf import settings
 import jwt
 from datetime import datetime
-
+from chuniscore_recorder.models.proxy.userex import UserEx
 
 class JWTTokenVerifyAuthentication(BaseAuthentication):
     def authenticate(self, request):
@@ -21,4 +21,6 @@ class JWTTokenVerifyAuthentication(BaseAuthentication):
             raise exceptions.AuthenticationFailed('Invalid token.')
         if payload['until'] < datetime.now().timestamp():
             raise exceptions.AuthenticationFailed('Token is expired.')
-        return (payload, None)
+        user = UserEx.objects.select_related('chuni_user').get(name=payload['name'])
+        return user, None
+

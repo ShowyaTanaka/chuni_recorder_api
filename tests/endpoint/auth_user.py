@@ -3,7 +3,7 @@ import unittest
 from datetime import time
 
 from django.test import Client
-from chuniscore_recorder.models.proxy import UserEx
+from chuniscore_recorder.models.proxy import UserEx, ChuniUserEx
 import pytest
 from django.conf import settings
 import jwt
@@ -112,3 +112,34 @@ class AuthUserTest(unittest.TestCase):
             token = self.token_at_2022_01_01()
             response = client.get('/auth/check/', headers={'Token': token})
             self.assertEqual(response.json(), {'is_authenticated': False})
+
+    def _create_chuni_user(self):
+        user = UserEx.objects.get(name='test')
+        ChuniUserEx.create_chuni_user(name='test_chuni_user', user=user)
+
+    @pytest.mark.django_db
+    def test_status(self):
+        with self.subTest("トークンが存在する場合,ユーザーのステータスを取得する"):
+            client = Client()
+            response = client.post('/auth/login/', {'name': 'test', 'password': 'password'})
+            response = client.get('/auth/my_status/', headers={'Token': response.json().get('token')})
+            self.assertEqual(response.json(), {'name': 'test', 'chuni_player_name': None})
+        with self.subTest("トークンが存在しない場合,エラーを返す"):
+            client = Client()
+            response = client.get('/auth/my_status/')
+            self.assertEqual(response.status_code, 403)
+        with self.subTest("トークンが不正な場合,エラーを返す"):
+            client = Client()
+            response = client.get('/auth/my_status/', headers={'Token': 'AA'})
+            self.assertEqual(response.status_code, 403)
+        with self.subTest("トークンが期限切れの場合,エラーを返す"):
+            client = Client()
+            token = self.token_at_2022_01_01()
+            response = client.get('/auth/my_status/', headers={'Token': token})
+            self.assertEqual(response.status_code, 403)
+        with self.subTest("チュウニズムユーザーが存在する場合,ユーザーのステータスを取得する"):
+            self._create_chuni_user()
+            client = Client()
+            response = client.post('/auth/login/', {'name': 'test', 'password': 'password'})
+            response = client.get('/auth/my_status/', headers={'Token': response.json().get('token')})
+            self.assertEqual(response.json(), {'name': 'test', 'chuni_player_name': 'test_chuni_user'})
