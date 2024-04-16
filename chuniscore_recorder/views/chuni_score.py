@@ -16,7 +16,10 @@ class ChuniScoreViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
         context["max_music_id"] = ChuniMusics.objects.count()
         return context
 
-    @action(methods=['post'], detail=False)
+    @action(methods=["post"], detail=False)
     def register_score(self, request):
         super().create(request)
 
+    @action(methods=["get"], detail=False)
+    def get_score(self, request):
+        pass

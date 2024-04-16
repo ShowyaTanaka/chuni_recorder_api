@@ -2,23 +2,21 @@
 
 from django.db import migrations, models
 
+
 def insert_difficulty(apps, schema_editor):
-    difficulty_rank = apps.get_model('chuniscore_recorder', 'ChuniDifficultyRank')
-    difficultys = [
-        'BASIC',
-        'ADVANCED',
-        'EXPERT',
-        'MASTER',
-        'WORLD\'S END',
-        'ULTIMA'
-    ]
+    difficulty_rank = apps.get_model("chuniscore_recorder", "ChuniDifficultyRank")
+    difficultys = ["BASIC", "ADVANCED", "EXPERT", "MASTER", "WORLD'S END", "ULTIMA"]
     for difficulty in difficultys:
         difficulty_rank.objects.create(difficulty_rank=difficulty)
+
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('chuniscore_recorder', '0002_chunidifficulty_chunidifficultyrank_chunigenres_and_more'),
+        (
+            "chuniscore_recorder",
+            "0002_chunidifficulty_chunidifficultyrank_chunigenres_and_more",
+        ),
     ]
 
     operations = [

@@ -14,34 +14,43 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 import os
 
 from django.contrib import admin
 from django.urls import path, include
 from config import settings
-from drf_spectacular.views import (
-    SpectacularAPIView,
-    SpectacularRedocView,
-    SpectacularSwaggerView,
-)
-if settings.DEBUG and os.environ.get("IS_DOCKER", False).lower() != 'true':
+
+if settings.DEBUG and os.environ.get("IS_DOCKER", "false").lower() != "true":
     import debug_toolbar  # 追加
+    from drf_spectacular.views import (
+        SpectacularAPIView,
+        SpectacularRedocView,
+        SpectacularSwaggerView,
+    )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     # 127.0.0.1/8000/api/schema にアクセスするとテキストファイルをダウンロードできます
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # Redocの設定
     # 今回は127.0.0.1/8000/api/redoc にアクセスするとRedocが表示されるよう設定します
-    path(
-        "api/redoc/",
-        SpectacularRedocView.as_view(url_name="schema"),
-        name="redoc",
-    ),
-    path('', include('chuniscore_recorder.urls.auth_user')),
-    path('', include('chuniscore_recorder.urls.user_conf')),
-    path('', include('chuniscore_recorder.urls.chuni_musics')),
+    path("", include("chuniscore_recorder.urls.auth_user")),
+    path("", include("chuniscore_recorder.urls.user_conf")),
+    path("", include("chuniscore_recorder.urls.chuni_musics")),
+    path("", include("chuniscore_recorder.urls.chuni_score")),
 ]
-if settings.DEBUG and os.environ.get("IS_DOCKER", False).lower() != 'true':
-    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
+if settings.DEBUG and os.environ.get("IS_DOCKER", "false").lower() != "true":
+    urlpatterns += [
+        path("__debug__/", include(debug_toolbar.urls)),
+        path(
+            "api/redoc/",
+            SpectacularRedocView.as_view(url_name="schema"),
+            name="redoc",
+        ),
+        path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+        path(
+            "docs/",
+            SpectacularSwaggerView.as_view(url_name="schema"),
+            name="swagger-ui",
+        ),
+    ]

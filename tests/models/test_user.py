@@ -3,6 +3,7 @@ from chuniscore_recorder.models.proxy.userex import UserEx
 from chuniscore_recorder.models.user import User
 import pytest
 
+
 @pytest.mark.django_db
 class TestUser(unittest.TestCase):
     def test_password(self):
@@ -15,7 +16,6 @@ class TestUser(unittest.TestCase):
             with self.assertRaises(Exception):
                 UserEx.create_user("test", "password")
 
-
         with self.subTest("パスワード認証に基づいて,ユーザーを取得できる"):
             user = UserEx.get_user_permission("test", "password")
             self.assertEqual(user.name, "test")
@@ -27,4 +27,3 @@ class TestUser(unittest.TestCase):
         with self.subTest("パスワードが違うユーザーを取得できない"):
             user = UserEx.get_user_permission("test", "password2")
             self.assertEqual(user, False)
-
