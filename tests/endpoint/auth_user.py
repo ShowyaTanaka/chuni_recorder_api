@@ -216,3 +216,57 @@ class AuthUserTest(unittest.TestCase):
                 response.json(),
                 {"user_name": "test", "chuni_player_name": "test_chuni_user"},
             )
+
+    @pytest.mark.django_db
+    def test_logout(self):
+        with self.subTest("トークンが存在する場合,ログアウトする"):
+            client = Client()
+            response = client.post(
+                "/auth/login/", {"user_name": "test", "password": "password"}
+            )
+            client.cookies = SimpleCookie(
+                {"refresh_token": response.cookies.get("refresh_token").value}
+            )
+            self.assertEqual(UserEx.objects.get(name="test").current_refresh_token, response.cookies.get("refresh_token").value)
+            response = client.delete("/auth/logout/", headers={"Token": response.json().get("token")})
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.cookies.get("refresh_token").value, "")
+            self.assertEqual(
+                UserEx.objects.get(name="test").current_refresh_token, None
+            )
+        with self.subTest("JWTトークンが存在しない場合,エラーを返す"):
+            client = Client()
+            response = client.post("/auth/login/", {"user_name": "test", "password": "password"})
+            client.cookies = SimpleCookie(
+                {"refresh_token": response.cookies.get("refresh_token").value}
+            )
+            response = client.delete("/auth/logout/")
+            self.assertEqual(response.status_code, 403)
+        with self.subTest("JWTトークンが不正な場合,エラーを返す"):
+            client = Client()
+            response = client.post("/auth/login/", {"user_name": "test", "password": "password"})
+            client.cookies = SimpleCookie(
+                {"refresh_token": response.cookies.get("refresh_token").value}
+            )
+            response = client.delete("/auth/logout/", headers={"Token": "AA"})
+            self.assertEqual(response.status_code, 403)
+        with self.subTest("JWTトークンが期限切れの場合,エラーを返す"):
+            client = Client()
+            response = client.post("/auth/login/", {"user_name": "test", "password": "password"})
+            client.cookies = SimpleCookie(
+                {"refresh_token": response.cookies.get("refresh_token").value}
+            )
+            token = self.token_at_2022_01_01()
+            response = client.delete("/auth/logout/", headers={"Token": token})
+            self.assertEqual(response.status_code, 403)
+        with self.subTest("リフレッシュトークンが不正な場合,エラーを返す"):
+            client = Client()
+            response = client.post("/auth/login/", {"user_name": "test", "password": "password"})
+            cookie = response.cookies.get("refresh_token")
+            client.cookies = SimpleCookie(
+                {"refresh_token": "AA"}
+            )
+            response = client.delete("/auth/logout/", headers={"Token": response.json().get("token")})
+            self.assertEqual(response.status_code, 403)
+            self.assertEqual(UserEx.objects.get(name="test").current_refresh_token, cookie.value)
+

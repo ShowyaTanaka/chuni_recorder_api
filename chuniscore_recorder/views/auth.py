@@ -74,6 +74,11 @@ class AuthUserJWTOperateView(viewsets.GenericViewSet):
 
     @action(methods=["delete"], detail=False, url_path="logout", url_name="logout")
     def delete_token(self, request, *args, **kwargs):
+        if request.user.current_refresh_token != request.COOKIES.get("refresh_token"):
+            return Response(
+                {"detail": "Refresh token is invalid."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
         request.user.current_refresh_token = None
         request.user.refresh_token_updated_at = None
         request.user.save()

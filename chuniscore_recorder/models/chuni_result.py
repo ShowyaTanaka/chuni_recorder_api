@@ -8,20 +8,14 @@ class ChuniResult(models.Model):
         related_name="result_user",
         help_text="ユーザー名",
     )
-    music = models.ForeignKey(
-        "ChuniMusics",
+    music_difficulty = models.ForeignKey(
+        "ChuniDifficulty",
         on_delete=models.PROTECT,
         related_name="result_music",
         help_text="曲名",
     )
-    difficulty = models.ForeignKey(
-        "ChuniDifficulty",
-        on_delete=models.PROTECT,
-        related_name="result_difficulty",
-        help_text="難易度",
-    )
     score = models.IntegerField(help_text="スコア")
-    play_date = models.DateField(help_text="プレイ日")
+    registered_time = models.DateTimeField(help_text="登録日")
 
     class Meta:
         db_table = "chuni_result"
