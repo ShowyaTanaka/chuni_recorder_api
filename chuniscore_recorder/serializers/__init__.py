@@ -8,4 +8,5 @@ from chuniscore_recorder.serializers.chuni_score_record import (
 from chuniscore_recorder.serializers.user_conf import (
     CreateUserSerializer,
     UpdateChuniUserSerializer,
+    CreateChuniUserSerializer,
 )

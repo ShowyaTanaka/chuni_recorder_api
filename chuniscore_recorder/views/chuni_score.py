@@ -1,5 +1,6 @@
 from rest_framework import viewsets, mixins
 from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from chuniscore_recorder.models import ChuniMusics, ChuniResult, ChuniDifficultyRank
 from chuniscore_recorder.serializers import (
@@ -9,7 +10,7 @@ from chuniscore_recorder.serializers import (
 from chuniscore_recorder.utils.auth_permissions.auth import JWTTokenVerifyAuthentication
 
 
-class ChuniScoreViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
+class ChuniScoreViewSet(viewsets.GenericViewSet):
     queryset = ChuniResult.objects.all()
     serializer_class = None
     authentication_classes = [JWTTokenVerifyAuthentication]
@@ -24,7 +25,7 @@ class ChuniScoreViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
 
     def get_queryset(self):
         if self.action == "get_score":
-            return ChuniResult.objects.filter(user=self.request.user).select_related(
+            return ChuniResult.objects.filter(user=self.kwargs["pk"]).select_related(
                 "music_difficulty__music", "music_difficulty__difficulty_rank"
             )
         return super().get_queryset()
@@ -39,6 +40,8 @@ class ChuniScoreViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     def register_score(self, request):
         super().create(request)
 
-    @action(methods=["get"], detail=False)
-    def get_score(self, request):
-        pass
+    @action(methods=["get"], detail=True)
+    def get_score(self, request, pk=None):
+        if pk is None:
+            return Response({"detail": "ユーザー名が入力されていません。"}, status=400)
+        return super().list(request)
