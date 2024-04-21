@@ -28,4 +28,6 @@ workflows:
   build_compose_and_test:
     jobs:
       - build
-      - test
+      - test:
+          requires:
+            - build
