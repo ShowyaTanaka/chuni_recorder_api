@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/project
     machine:
-       image: cimg/ubuntu-2004
+       image: ubuntu-2004:2024.01.2
     steps:
       - checkout
       - run: cp .env.docker.example .env.docker
@@ -11,7 +11,7 @@ jobs:
   test:
     working_directory: ~/project
     machine:
-       image: cimg/ubuntu-2004
+       image: ubuntu-2004:2024.01.2
     steps:
       - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
       - run: sleep 10
