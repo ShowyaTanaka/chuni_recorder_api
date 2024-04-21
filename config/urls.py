@@ -15,13 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-import os
 
 from django.contrib import admin
 from django.urls import path, include
 from config import settings
 
-if settings.DEBUG and os.environ.get("IS_DOCKER", "false").lower() != "true":
+if settings.DEBUG:
     import debug_toolbar  # 追加
     from drf_spectacular.views import (
         SpectacularAPIView,
@@ -39,7 +38,7 @@ urlpatterns = [
     path("", include("chuniscore_recorder.urls.chuni_musics")),
     path("", include("chuniscore_recorder.urls.chuni_score")),
 ]
-if settings.DEBUG and os.environ.get("IS_DOCKER", "false").lower() != "true":
+if settings.DEBUG:
     urlpatterns += [
         path("__debug__/", include(debug_toolbar.urls)),
         path(

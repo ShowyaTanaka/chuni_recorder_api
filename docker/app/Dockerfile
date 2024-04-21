@@ -5,7 +5,7 @@ RUN pip install --upgrade pip && pip install pipenv
 COPY docker/app/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY Pipfile Pipfile.lock /app/
 WORKDIR /app
-RUN pipenv install --deploy --system
+RUN pipenv install --dev --deploy --system
 WORKDIR /
 RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

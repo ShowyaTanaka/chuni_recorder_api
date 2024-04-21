@@ -1,6 +1,5 @@
 from .base import *
 
-load_dotenv()
 SPECTACULAR_SETTINGS = {
     "TITLE": "chuniscore_recorder API",
     "DESCRIPTION": "詳細",

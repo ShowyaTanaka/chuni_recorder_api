@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  test:
+    steps:
+      - checkout
+      - run: cp .env.docker.example .env.docker
+      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up exec app pytest
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only:
+                - main
+                - develop
