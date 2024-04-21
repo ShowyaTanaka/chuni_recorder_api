@@ -5,6 +5,7 @@ jobs:
   test:
     machine:
       image: ubuntu-2204
+    resource_class: small
     steps:
       - checkout
       - run: cp .env.docker.example .env.docker
