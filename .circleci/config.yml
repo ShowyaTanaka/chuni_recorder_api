@@ -14,27 +14,27 @@ jobs:
     working_directory: ~/project
     docker:
       - image: $DOCKER_HUB_USER_NAME/chuniscorerecorder_ci_test_app
+        environment:
+          DB_NAME: chuni_recorder_test
+          DB_USER: chuni
+          DB_PASS: chuni
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          TEST_DB_NAME: chuni_recorder_test
+          DJANGO_DEBUG_MODE: true
+          ALLOWED_HOSTS: '*'
+          MODE: LOCAL
       - image: cimg/mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: chuni_recorder_test
+          MYSQL_USER: chuni
+          MYSQL_PASSWORD: chuni
     steps:
       - checkout
       - run: cd /app
       - run: sleep 20
       - run: pytest
-    environment:
-      # mysql用の環境変数
-        MYSQL_USER: chuni
-        MYSQL_PASSWORD: chuni
-        MYSQL_DATABASE: chuni_recorder_test
-        # app用の環境変数
-        DB_NAME: chuni_recorder_test
-        DB_USER: chuni
-        DB_PASS: chuni
-        DB_HOST: 127.0.0.1
-        DB_PORT: 3306
-        TEST_DB_NAME: chuni_recorder_test
-        DJANGO_DEBUG_MODE: true
-        ALLOWED_HOSTS: '*'
-        MODE: LOCAL
 workflows:
   version: 2
   build_compose_and_test:
