@@ -1,19 +1,42 @@
 version: 2.1
 jobs:
-  build_and_test:
-    # CircleCIが無料枠なので並列実行不可
+  build:
     working_directory: ~/project
     machine:
        image: ubuntu-2004:2024.01.2
     steps:
       - checkout
-      - run: cp .env.docker.example .env.docker
-      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-      - run: sleep 10
-      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml exec app pytest
-
+      - run: docker build -t app -f docker/for_ci/app_for_pytest/Dockerfile .
+      - run: docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
+      - run: docker tag app $DOCKER_HUB_USER/chuniscorerecorder_ci_test_app
+      - run: docker push $DOCKER_HUB_USER/chuniscorerecorder_ci_test_app
+  test:
+    working_directory: ~/project
+    docker:
+      - image: $DOCKER_HUB_USER/chuniscorerecorder_ci_test_app
+      - image: cimg/mysql:8.0
+    steps:
+      - checkout
+      - run: sleep 30
+      - run: cd /app
+      - run: pytest
+    environment:
+        ROOT_PASS: root
+        DB_NAME: chuni_recorder
+        DB_USER: chuni
+        DB_PASS: chuni
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        TZ: Asia/Tokyo
+        TEST_DB_NAME: chuni_recorder_test
+        DJANGO_DEBUG_MODE: true
+        ALLOWED_HOSTS: '*'
+        MODE: LOCAL
 workflows:
   version: 2
   build_compose_and_test:
     jobs:
-      - build_and_test
+      - build
+      - test:
+          requires:
+            - build
