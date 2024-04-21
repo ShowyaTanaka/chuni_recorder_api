@@ -23,7 +23,7 @@ jobs:
     environment:
       # mysql用の環境変数
         MYSQL_USER: chuni
-        MYSQL_PASS: chuni
+        MYSQL_PASSWORD: chuni
         MYSQL_DATABASE: chuni_recorder_test
         # app用の環境変数
         DB_NAME: chuni_recorder_test
