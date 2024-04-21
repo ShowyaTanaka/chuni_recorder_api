@@ -6,3 +6,4 @@
 docker/db/data/*
 /.env
 /.env.docker
+/.coverage
