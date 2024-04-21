@@ -4,8 +4,6 @@ jobs:
     working_directory: ~/project
     machine:
        image: ubuntu-2004:2024.01.2
-    context:
-      -
     steps:
       - checkout
       - run: docker build -t app -f docker/for_ci/app_for_pytest/Dockerfile .
