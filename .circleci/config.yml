@@ -4,16 +4,18 @@ jobs:
     working_directory: ~/project
     machine:
        image: ubuntu-2004:2024.01.2
+    context:
+      -
     steps:
       - checkout
       - run: docker build -t app -f docker/for_ci/app_for_pytest/Dockerfile .
-      - run: docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_ACCESS_TOKEN
-      - run: docker tag app $DOCKER_HUB_USER/chuniscorerecorder_ci_test_app
-      - run: docker push $DOCKER_HUB_USER/chuniscorerecorder_ci_test_app
+      - run: docker login -u $DOCKER_HUB_USER_NAME -p $DOCKER_HUB_ACCESS_TOKEN
+      - run: docker tag app $DOCKER_HUB_USER_NAME/chuniscorerecorder_ci_test_app
+      - run: docker push $DOCKER_HUB_USER_NAME/chuniscorerecorder_ci_test_app
   test:
     working_directory: ~/project
     docker:
-      - image: $DOCKER_HUB_USER/chuniscorerecorder_ci_test_app
+      - image: $DOCKER_HUB_USER_NAME/chuniscorerecorder_ci_test_app
       - image: cimg/mysql:8.0
     steps:
       - checkout
