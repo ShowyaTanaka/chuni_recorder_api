@@ -1,6 +1,8 @@
 version: 2
 jobs:
   test:
+    machine:
+      image: circleci/classic:edge
     steps:
       - checkout
       - run: cp .env.docker.example .env.docker
