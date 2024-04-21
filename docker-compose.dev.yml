@@ -12,7 +12,6 @@ services:
     environment:
       USER_ID: $${id -u}
       GROUP_ID: $${id -g}
-      IS_DOCKER: True
       DB_HOST: db
     env_file:
       - .env.docker

@@ -1,23 +1,45 @@
-version: 2
+version: 2.1
 jobs:
   build:
-
-  test:
+    working_directory: ~/project
     machine:
-      image: ubuntu-2204
-    resource_class: small
+       image: ubuntu-2004:2024.01.2
     steps:
       - checkout
-      - run: cp .env.docker.example .env.docker
-      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml exec app pytest
+      - run: docker build -t app -f docker/for_ci/app_for_pytest/Dockerfile .
+      - run: docker login -u $DOCKER_HUB_USER_NAME -p $DOCKER_HUB_ACCESS_TOKEN
+      - run: docker tag app $DOCKER_HUB_USER_NAME/chuniscorerecorder_ci_test_app
+      - run: docker push $DOCKER_HUB_USER_NAME/chuniscorerecorder_ci_test_app
+  test:
+    working_directory: ~/project
+    docker:
+      - image: $DOCKER_HUB_USER_NAME/chuniscorerecorder_ci_test_app
+        environment:
+          DB_NAME: chuni_recorder
+          DB_USER: root
+          DB_PASS: root
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          TEST_DB_NAME: chuni_recorder
+          DJANGO_DEBUG_MODE: true
+          ALLOWED_HOSTS: '*'
+          MODE: LOCAL
+      - image: cimg/mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: chuni_recorder
+          MYSQL_USER: chuni
+          MYSQL_PASSWORD: chuni
+    steps:
+      - checkout
+      - run: cd /app
+      - run: sleep 20
+      - run: pytest
 workflows:
   version: 2
-  test:
+  build_compose_and_test:
     jobs:
+      - build
       - test:
-          filters:
-            branches:
-              only:
-                - master
-                - develop
+          requires:
+            - build
