@@ -15,19 +15,19 @@ jobs:
     docker:
       - image: $DOCKER_HUB_USER_NAME/chuniscorerecorder_ci_test_app
         environment:
-          DB_NAME: chuni_recorder_test
-          DB_USER: chuni
-          DB_PASS: chuni
+          DB_NAME: chuni_recorder
+          DB_USER: root
+          DB_PASS: root
           DB_HOST: 127.0.0.1
           DB_PORT: 3306
-          TEST_DB_NAME: chuni_recorder_test
+          TEST_DB_NAME: chuni_recorder
           DJANGO_DEBUG_MODE: true
           ALLOWED_HOSTS: '*'
           MODE: LOCAL
       - image: cimg/mysql:8.0
         environment:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: chuni_recorder_test
+          MYSQL_DATABASE: chuni_recorder
           MYSQL_USER: chuni
           MYSQL_PASSWORD: chuni
     steps:
