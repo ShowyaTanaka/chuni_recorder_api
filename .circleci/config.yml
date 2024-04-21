@@ -18,6 +18,7 @@ jobs:
     steps:
       - checkout
       - run: cd /app
+      - run: sleep 20
       - run: pytest
     environment:
       # mysql用の環境変数
@@ -28,7 +29,7 @@ jobs:
         DB_NAME: chuni_recorder_test
         DB_USER: chuni
         DB_PASS: chuni
-        DB_HOST: localhost
+        DB_HOST: 127.0.0.1
         DB_PORT: 3306
         TEST_DB_NAME: chuni_recorder_test
         DJANGO_DEBUG_MODE: true
