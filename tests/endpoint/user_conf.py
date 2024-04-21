@@ -177,3 +177,98 @@ class UserConfTest(unittest.TestCase):
                 headers={"Token": token},
             )
             self.assertEqual(response.status_code, 400)
+
+    @pytest.mark.django_db
+    def test_chuni_player_name(self):
+        with self.subTest("ユーザーが存在しない場合、エラーが発生する。"):
+            client = Client()
+            response = client.patch(
+                "/user_conf/chuni_player_name/",
+                {"chuni_player_name": "test"},
+            )
+            self.assertEqual(response.status_code, 403)
+            self.assertEqual(UserEx.objects.filter(name="test").exists(), False)
+        with self.subTest(
+            "ユーザーが存在し、チュウニズムのプレイヤーが作成されていない場合、エラーが発生する。"
+        ):
+            client = Client()
+            response = client.post(
+                "/user_conf/new/", {"user_name": "test_", "password": "#$DFG1234"}
+            )
+            token = response.json()["token"]
+            response = client.patch(
+                "/user_conf/chuni_player_name/",
+                {"chuni_player_name": "test"},
+                headers={"Token": token},
+                content_type="application/json",
+            )
+            self.assertEqual(
+                {"non_field_errors": ["チュウニズムのユーザーが存在しません。"]},
+                response.json(),
+            )
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(UserEx.objects.filter(name="test_").exists(), True)
+            self.assertEqual(
+                UserEx.objects.filter(name="test_", chuni_user__isnull=False).exists(),
+                False,
+            )
+        with self.subTest("ユーザーが存在する場合、プレイヤー名が更新される。"):
+            client = Client()
+            response = client.post(
+                "/user_conf/new/", {"user_name": "test", "password": "#$DFG1234"}
+            )
+            token = response.json()["token"]
+
+            response = client.post(
+                "/user_conf/new_chuni_user/",
+                {"chuni_player_name": "test"},
+                headers={"Token": token},
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                UserEx.objects.get(name="test").chuni_user.player_name, "test"
+            )
+            response = client.patch(
+                "/user_conf/chuni_player_name/",
+                {"chuni_player_name": "test2"},
+                headers={"Token": token},
+                content_type="application/json",
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                UserEx.objects.get(name="test").chuni_user.player_name, "test2"
+            )
+        with self.subTest("プレイヤー名が空文字の場合、エラーが発生する。"):
+            client = Client()
+            response = client.post(
+                "/user_conf/new/", {"user_name": "test2", "password": "#$DFG1234"}
+            )
+            token = response.json()["token"]
+            response = client.patch(
+                "/user_conf/chuni_player_name/",
+                json={"chuni_player_name": ""},
+                headers={"Token": token},
+            )
+            self.assertEqual(response.status_code, 400)
+        with self.subTest("全角文字を含んだプレイヤー名であっても更新できる。"):
+            client = Client()
+            response = client.post(
+                "/user_conf/new/", {"user_name": "test3", "password": "#$DFG1234"}
+            )
+            token = response.json()["token"]
+            client.post(
+                "/user_conf/new_chuni_user/",
+                {"chuni_player_name": "test"},
+                headers={"Token": token},
+            )
+            response = client.patch(
+                "/user_conf/chuni_player_name/",
+                {"chuni_player_name": "あいうえおかきくけこ"},
+                headers={"Token": token},
+                content_type="application/json",
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                UserEx.objects.get(name="test3").chuni_user.player_name,
+                "あいうえおかきくけこ",
+            )

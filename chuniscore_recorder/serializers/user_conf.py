@@ -54,9 +54,15 @@ class UpdateChuniUserSerializer(serializers.Serializer):
         max_length=20, write_only=True, required=True, allow_blank=False
     )
 
+    def validate(self, attrs):
+        if self.context["user"].chuni_user is None:
+            raise serializers.ValidationError("チュウニズムのユーザーが存在しません。")
+        return attrs
+
     def update(self, instance, validated_data):
-        user = self.context["user"]
-        ChuniUserEx.update_chuni_player_name(user, validated_data["chuni_player_name"])
+        ChuniUserEx.update_chuni_player_name(
+            instance, validated_data["chuni_player_name"]
+        )
         return Response({"message": "ユーザー情報の更新が完了しました。"}, status=200)
 
 

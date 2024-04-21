@@ -20,8 +20,6 @@ class UserConfigModifyViewSet(viewsets.GenericViewSet):
     authentication_classes = [JWTTokenVerifyAuthentication]
 
     def get_serializer_class(self):
-        if self.action == "chuni_player_name":
-            return UpdateChuniUserSerializer
         if self.action == "new_chuni_user":
             return CreateChuniUserSerializer
         return super().get_serializer_class()
@@ -41,8 +39,11 @@ class UserConfigModifyViewSet(viewsets.GenericViewSet):
 
     @action(methods=["patch"], detail=False)
     def chuni_player_name(self, request):
-        serializer = self.get_serializer(data=request.data)
+        user = self.request.user
+        serializer = UpdateChuniUserSerializer(
+            data=request.data, context={"user": user}
+        )
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        serializer.save()
+        serializer.update(user, serializer.validated_data)
         return Response(serializer.data, status=200)

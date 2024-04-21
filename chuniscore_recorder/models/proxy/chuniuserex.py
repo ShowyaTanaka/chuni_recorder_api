@@ -20,8 +20,8 @@ class ChuniUserEx(ChuniUser):
         user.save()
         return user
 
-    @transaction.atomic
     @classmethod
+    @transaction.atomic
     def delete_chuni_user(cls, user: User):
         if user.chuni_user is None:
             raise ValueError("User does not have chuni_user.")
@@ -29,8 +29,8 @@ class ChuniUserEx(ChuniUser):
         user.save()
         return True
 
-    @transaction.atomic
     @classmethod
+    @transaction.atomic
     def reset_chuni_user_record(cls, user: User):
         # ここの機能については考慮の余地ありなので関数は実装しておくが利用しない。
         if user.chuni_user is None:
@@ -40,8 +40,8 @@ class ChuniUserEx(ChuniUser):
         ChuniResult.objects.filter(chuni_user=user.chuni_user).delete()
         return user.chuni_user
 
-    @transaction.atomic
     @classmethod
+    @transaction.atomic
     def update_chuni_player_name(cls, user: User, name: str):
         if user.chuni_user is None:
             raise ValueError("User does not have chuni_user.")
