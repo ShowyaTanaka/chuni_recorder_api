@@ -1,13 +1,15 @@
 version: 2
 jobs:
+  build:
+
   test:
     machine:
-      image: circleci/classic:edge
+      image: ubuntu-2204
     steps:
       - checkout
       - run: cp .env.docker.example .env.docker
       - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up exec app pytest
+      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml exec app pytest
 workflows:
   version: 2
   test:
