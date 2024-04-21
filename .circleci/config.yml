@@ -17,17 +17,19 @@ jobs:
       - image: cimg/mysql:8.0
     steps:
       - checkout
-      - run: sleep 30
       - run: cd /app
       - run: pytest
     environment:
-        ROOT_PASS: root
-        DB_NAME: chuni_recorder
+      # mysql用の環境変数
+        MYSQL_USER: chuni
+        MYSQL_PASS: chuni
+        MYSQL_DATABASE: chuni_recorder_test
+        # app用の環境変数
+        DB_NAME: chuni_recorder_test
         DB_USER: chuni
         DB_PASS: chuni
         DB_HOST: 127.0.0.1
         DB_PORT: 3306
-        TZ: Asia/Tokyo
         TEST_DB_NAME: chuni_recorder_test
         DJANGO_DEBUG_MODE: true
         ALLOWED_HOSTS: '*'
