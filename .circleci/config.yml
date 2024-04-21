@@ -1,23 +1,25 @@
-version: 2
+version: 2.1
 jobs:
   build:
-
-  test:
+    working_directory: ~/project
     machine:
-      image: ubuntu-2204
-    resource_class: small
+       image: ubuntu-2004
     steps:
       - checkout
       - run: cp .env.docker.example .env.docker
+      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml build
+  test:
+    working_directory: ~/project
+    machine:
+       image: ubuntu-2004
+    steps:
       - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+      - run: sleep 10
       - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml exec app pytest
+
 workflows:
   version: 2
-  test:
+  build_compose_and_test:
     jobs:
-      - test:
-          filters:
-            branches:
-              only:
-                - master
-                - develop
+      - build
+      - test
