@@ -1,24 +1,13 @@
 version: 2.1
 jobs:
-  build:
+  build_and_test:
+    # CircleCIが無料枠なので並列実行不可
     working_directory: ~/project
     machine:
        image: ubuntu-2004:2024.01.2
     steps:
       - checkout
       - run: cp .env.docker.example .env.docker
-      - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml build
-      - save_cache:
-            key: v1-dependencies-{{ .Revision }}
-            paths:
-                - /root/docker-image
-  test:
-    working_directory: ~/project
-    machine:
-       image: ubuntu-2004:2024.01.2
-    steps:
-      - restore_cache:
-            key: v1-dependencies-{{ .Revision }}
       - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
       - run: sleep 10
       - run: docker compose -f docker-compose.yml -f docker-compose.dev.yml exec app pytest
@@ -27,7 +16,4 @@ workflows:
   version: 2
   build_compose_and_test:
     jobs:
-      - build
-      - test:
-          requires:
-            - build
+      - build_and_test
