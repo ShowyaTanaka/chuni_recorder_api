@@ -7,8 +7,6 @@ from chuniscore_recorder.models import ChuniMusics, ChuniDifficulty, ChuniResult
 
 class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
 
-    score_list = serializers.ListField(required=True)
-
     class _ChuniScoreRecordValidationSerializer(serializers.Serializer):
         score = serializers.FloatField(
             help_text="スコア",
@@ -49,6 +47,10 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
                 raise serializers.ValidationError("難易度が不正です")
             return value
 
+    score_list = serializers.ListField(
+        required=True, child=_ChuniScoreRecordValidationSerializer()
+    )
+
     def validate_score_list(self, value):
         for dict_value in value:
             serializer = self._ChuniScoreRecordValidationSerializer(
@@ -69,19 +71,24 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
             .all()
         )
         result_list = []
+        music_id_list = [score["music_id"] for score in validated_data["score_list"]]
+        results = ChuniResult.objects.filter(music_difficulty__music_id__in=music_id_list).group_by("music_difficulty__music").latest("play_time")
         for score in validated_data["score_list"]:
             music_difficulty = difficulty.get(
                 music_id=score["music_id"],
                 difficulty_rank__difficulty_rank=score["difficulty"],
             )
-            result_list.append(
-                ChuniResult(
-                    user=self.context["request"].user,
-                    music_difficulty=music_difficulty,
-                    score=score["score"],
-                    registered_time=datetime.now(timezone.utc),
-                )
-            )
+            if results.filter(music_difficulty__music_id=score["music_id"]).exists():
+                result = results.get(music_difficulty__music_id=score["music_id"])
+                if result.score <= score["score"]:
+                    result_list.append(
+                        ChuniResult(
+                            user=self.context["request"].user,
+                            music_difficulty=music_difficulty,
+                            score=score["score"],
+                            registered_time=datetime.now(timezone.utc),
+                        )
+                    )
         ChuniResult.objects.bulk_create(result_list)
         return validated_data
 
