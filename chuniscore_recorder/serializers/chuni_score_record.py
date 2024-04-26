@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from django.db import transaction
 from rest_framework import serializers
-from chuniscore_recorder.models import ChuniMusics, ChuniDifficulty, ChuniResult
+from chuniscore_recorder.models import ChuniDifficulty, ChuniResult
 
 
 class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
@@ -72,12 +72,22 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
         )
         result_list = []
         music_id_list = [score["music_id"] for score in validated_data["score_list"]]
-        results = ChuniResult.objects.filter(music_difficulty__music_id__in=music_id_list).group_by("music_difficulty__music").latest("play_time")
+        results = (
+            ChuniResult.objects.filter(music_difficulty__music_id__in=music_id_list)
+            .group_by("music_difficulty__music")
+            .latest("play_time")
+        )
         for score in validated_data["score_list"]:
-            music_difficulty = difficulty.get(
-                music_id=score["music_id"],
-                difficulty_rank__difficulty_rank=score["difficulty"],
-            )
+            try:
+                music_difficulty = difficulty.get(
+                    music_id=score["music_id"],
+                    difficulty_rank__difficulty_rank=score["difficulty"],
+                )
+            except ChuniDifficulty.DoesNotExist:
+                # 本来バリデーション段階で弾くべきだが、クエリの発行回数を減らすためにここで弾く
+                raise serializers.ValidationError(
+                    "この楽曲IDには存在しない難易度が指定されています"
+                )
             if results.filter(music_difficulty__music_id=score["music_id"]).exists():
                 result = results.get(music_difficulty__music_id=score["music_id"])
                 if result.score <= score["score"]:

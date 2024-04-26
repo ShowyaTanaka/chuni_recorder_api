@@ -10,4 +10,8 @@ class ChuniResultEx(ChuniResult):
     @classmethod
     @transaction.atomic
     def fetch_user_result(cls, user: User):
-        return cls.objects.filter(user=user).group_by("music_difficulty__music").latest("play_time")
+        return (
+            cls.objects.filter(user=user)
+            .group_by("music_difficulty__music")
+            .latest("play_time")
+        )

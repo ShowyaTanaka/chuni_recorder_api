@@ -25,8 +25,13 @@ class ChuniScoreViewSet(viewsets.GenericViewSet):
 
     def get_queryset(self):
         if self.action == "get_score":
-            return ChuniResult.objects.filter(user=self.kwargs["pk"]).select_related(
-                "music_difficulty__music", "music_difficulty__difficulty_rank"
+            return (
+                ChuniResult.objects.filter(user=self.kwargs["pk"])
+                .group_by("music_difficulty__music")
+                .latest("play_date")
+                .select_related(
+                    "music_difficulty__music", "music_difficulty__difficulty_rank"
+                )
             )
         return super().get_queryset()
 
@@ -34,6 +39,7 @@ class ChuniScoreViewSet(viewsets.GenericViewSet):
         context = super().get_serializer_context()
         context["max_music_id"] = ChuniMusics.objects.count()
         context["difficulty"] = ChuniDifficultyRank.objects.all()
+        context["user"] = self.request.user if hasattr(self.request, "user") else None
         return context
 
     @action(methods=["post"], detail=False)
