@@ -1,0 +1,17 @@
+[
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  1, "fields": {"music_id": 1, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  2, "fields": {"music_id": 2, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  3, "fields": {"music_id": 3, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  4, "fields": {"music_id": 4, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  5, "fields": {"music_id": 5, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  6, "fields": {"music_id": 6, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  7, "fields": {"music_id": 7, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  8, "fields": {"music_id": 8, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk":  9, "fields": {"music_id": 9, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk": 10, "fields": {"music_id": 10, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk": 11, "fields": {"music_id": 11, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk": 12, "fields": {"music_id": 12, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk": 13, "fields": {"music_id": 13, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk": 14, "fields": {"music_id": 14, "difficulty_rank_id": 4, "constant": 15.0}},
+  {"model": "chuniscore_recorder.chunidifficulty", "pk": 15, "fields": {"music_id": 15, "difficulty_rank_id": 4, "constant": 15.0}}
+]

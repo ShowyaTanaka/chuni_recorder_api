@@ -1,0 +1,17 @@
+[
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 1, "fields": {"title": "Ultimate Force"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 2, "fields": {"title": "Aleph-0"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 3, "fields": {"title": "Air"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 4, "fields": {"title": "Singularity"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 5, "fields": {"title": "Eltaw"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 6, "fields": {"title": "μάγια"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 7, "fields": {"title": "Ai Nov"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 8, "fields": {"title": "neu"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 9, "fields": {"title": "AXION"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 10, "fields": {"title": "Strahv"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 11, "fields": {"title": "Visterhv"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 12, "fields": {"title": "Quon -Extend-"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 13, "fields": {"title": "Ascension to Heaven"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 14, "fields": {"title": "AttraqtiA"}},
+  {"model":  "chuniscore_recorder.chunimusic", "pk": 15, "fields": {"title": "祈 -我ら神祖と共に歩むものなり-"}}
+]

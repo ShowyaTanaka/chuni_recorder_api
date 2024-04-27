@@ -1,0 +1,8 @@
+[
+  {"model":  "chuniscore_recorder.chunidifficultyrank", "pk": 1, "fields":  {"difficulty_rank":  "BASIC"}},
+  {"model":  "chuniscore_recorder.chunidifficultyrank", "pk": 2, "fields":  {"difficulty_rank":  "ADVANCED"}},
+  {"model":  "chuniscore_recorder.chunidifficultyrank", "pk": 3, "fields":  {"difficulty_rank":  "EXPERT"}},
+  {"model":  "chuniscore_recorder.chunidifficultyrank", "pk": 4, "fields":  {"difficulty_rank":  "MASTER"}},
+  {"model":  "chuniscore_recorder.chunidifficultyrank", "pk": 5, "fields":  {"difficulty_rank":  "ULTIMA"}},
+  {"model":  "chuniscore_recorder.chunidifficultyrank", "pk": 6, "fields":  {"difficulty_rank":  "WORLD'S END"}}
+]

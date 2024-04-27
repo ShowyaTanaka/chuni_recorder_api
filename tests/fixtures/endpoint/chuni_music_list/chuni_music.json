@@ -1,27 +1,27 @@
 [
   {
-    "model": "chuniscore_recorder.chunimusics",
+    "model": "chuniscore_recorder.chunimusic",
     "pk": 1,
     "fields": {
       "title": "テスト楽曲1(ULT,WEなし)"
     }
   },
   {
-    "model": "chuniscore_recorder.chunimusics",
+    "model": "chuniscore_recorder.chunimusic",
     "pk": 2,
     "fields": {
       "title": "テスト楽曲2(WEなし,ULTあり)"
     }
   },
   {
-    "model": "chuniscore_recorder.chunimusics",
+    "model": "chuniscore_recorder.chunimusic",
     "pk": 3,
     "fields": {
       "title": "テスト楽曲3(WEあり,ULTなし)"
     }
   },
   {
-        "model": "chuniscore_recorder.chunimusics",
+        "model": "chuniscore_recorder.chunimusic",
         "pk": 4,
         "fields": {
         "title": "テスト楽曲4(WEあり,ULTあり)"

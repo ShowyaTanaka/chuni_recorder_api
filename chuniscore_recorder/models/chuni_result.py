@@ -2,7 +2,7 @@ from django.db import models
 
 
 class ChuniResult(models.Model):
-    user = models.ForeignKey(
+    chuni_user = models.ForeignKey(
         "ChuniUser",
         on_delete=models.CASCADE,
         related_name="result_user",

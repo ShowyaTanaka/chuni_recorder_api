@@ -104,16 +104,34 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
 
 
 class ChuniScoreRecordListSerializer(serializers.ModelSerializer):
-    music_id = serializers.IntegerField(help_text="曲ID")
+    music_id = serializers.IntegerField(
+        help_text="曲ID", source="music_difficulty.music_id"
+    )
     difficulty = serializers.SerializerMethodField(
         help_text="難易度", method_name="get_difficulty"
+    )
+    music_title = serializers.SerializerMethodField(
+        help_text="曲名", method_name="get_music_title"
+    )
+    constant = serializers.CharField(
+        help_text="定数", source="music_difficulty.constant"
     )
     score = serializers.IntegerField(help_text="スコア")
     registered_time = serializers.DateTimeField(help_text="登録日")
 
     class Meta:
         model = ChuniResult
-        fields = ["music_id", "difficulty", "score", "registered_time"]
+        fields = [
+            "music_id",
+            "difficulty",
+            "music_title",
+            "score",
+            "registered_time",
+            "constant",
+        ]
 
     def get_difficulty(self, obj):
         return obj.music_difficulty.difficulty_rank.difficulty_rank
+
+    def get_music_title(self, obj):
+        return obj.music_difficulty.music.title

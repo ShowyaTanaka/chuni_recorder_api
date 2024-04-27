@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class ChuniGenres(models.Model):
+class ChuniGenre(models.Model):
     genre_name = models.CharField(max_length=255, help_text="ジャンル名")
 
     class Meta:

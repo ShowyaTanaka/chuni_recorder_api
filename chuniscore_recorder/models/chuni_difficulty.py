@@ -3,7 +3,7 @@ from django.db import models
 
 class ChuniDifficulty(models.Model):
     music = models.ForeignKey(
-        "ChuniMusics",
+        "ChuniMusic",
         on_delete=models.PROTECT,
         related_name="difficulty_music",
         help_text="曲名",

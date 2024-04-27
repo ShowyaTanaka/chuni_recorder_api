@@ -1,0 +1,3 @@
+[
+  {"model": "chuniscore_recorder.chuniuser", "pk": 1, "fields": {"player_name": "user1", "best_rating":  0.0, "update_date":  null}}
+]

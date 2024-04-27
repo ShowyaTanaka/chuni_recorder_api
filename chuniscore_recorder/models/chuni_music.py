@@ -1,10 +1,10 @@
 from django.db import models
 
 
-class ChuniMusics(models.Model):
+class ChuniMusic(models.Model):
     title = models.CharField(max_length=255, help_text="曲名")
     genre_name = models.ForeignKey(
-        "ChuniGenres",
+        "ChuniGenre",
         on_delete=models.PROTECT,
         related_name="chuni_musics_chuni_genres",
         help_text="ジャンル名",

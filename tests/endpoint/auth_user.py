@@ -101,13 +101,7 @@ class AuthUserTest(unittest.TestCase):
             previous_token_time = jwt.decode(
                 response.json().get("token"), settings.SECRET_KEY, algorithms=["HS256"]
             ).get("until")
-            response = client.get(
-                "/auth/refresh/",
-                headers={
-                    "Token": response.json().get("token"),
-                    "user_name": response.json().get("user_name"),
-                },
-            )
+            response = client.get("/auth/refresh/", headers={"user_name": "test"})
             self.assertEqual(response.status_code, 200)
             self.assertNotEqual(
                 jwt.decode(
@@ -284,3 +278,20 @@ class AuthUserTest(unittest.TestCase):
             self.assertEqual(
                 UserEx.objects.get(name="test").current_refresh_token, cookie.value
             )
+        with self.subTest(
+            "ログアウト後にトークンをリフレッシュしようとした場合、エラーを返す"
+        ):
+            client = Client()
+            response = client.post(
+                "/auth/login/", {"user_name": "test", "password": "password"}
+            )
+            client.cookies = SimpleCookie(
+                {"refresh_token": response.cookies.get("refresh_token").value}
+            )
+            response = client.delete(
+                "/auth/logout/", headers={"Token": response.json().get("token")}
+            )
+            self.assertEqual(response.status_code, 200)
+            response = client.get("/auth/refresh/", headers={"user_name": "test"})
+            self.assertEqual(response.status_code, 403)
+            self.assertEqual(response.json(), {"detail": "Token is invalid."})
