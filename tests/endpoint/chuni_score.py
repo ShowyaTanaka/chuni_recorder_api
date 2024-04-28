@@ -37,14 +37,12 @@ class ChuniScoreTest(TestCase):
                 [
                     {
                         "difficulty": "MASTER",
-                        "music_id": 1,
                         "music_title": "Ultimate Force",
                         "score": 965000,
                         "constant": "15.0",
                         "registered_time": "2024-04-26T20:00:00Z",
                     },
                     {
-                        "music_id": 2,
                         "difficulty": "MASTER",
                         "music_title": "Aleph-0",
                         "score": 975000,

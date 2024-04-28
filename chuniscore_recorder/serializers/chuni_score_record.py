@@ -107,9 +107,6 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
 
 
 class ChuniScoreRecordListSerializer(serializers.ModelSerializer):
-    music_id = serializers.IntegerField(
-        help_text="曲ID", source="music_difficulty.music_id"
-    )
     difficulty = serializers.CharField(
         help_text="難易度", source="music_difficulty.difficulty_rank.difficulty_rank"
     )
@@ -125,9 +122,8 @@ class ChuniScoreRecordListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChuniResult
         fields = [
-            "music_id",
-            "difficulty",
             "music_title",
+            "difficulty",
             "score",
             "registered_time",
             "constant",
