@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "チュウニズムの楽曲情報を登録します。"
 
     def add_arguments(self, parser):
-        parser.add_argument('--file-path', nargs=1, default='', type=str)
+        parser.add_argument("--file-path", nargs=1, default="", type=str)
 
     def handle(self, *args, **options):
         if not options["file_path"]:
@@ -48,7 +48,14 @@ class Command(BaseCommand):
         musics = ChuniMusic.objects.all()
         for index, row in df.iterrows():
             difficulty = row["difficulty"]
-            if difficulty not in ["BASIC", "ADVANCED", "EXPERT", "MASTER", "ULTIMA", "WORLD'S END"]:
+            if difficulty not in [
+                "BASIC",
+                "ADVANCED",
+                "EXPERT",
+                "MASTER",
+                "ULTIMA",
+                "WORLD'S END",
+            ]:
                 print("難易度が不正です。")
                 return
         create_list = []

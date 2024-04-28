@@ -7,3 +7,4 @@ docker/db/data/*
 /.env
 /.env.docker
 /.coverage
+.DS_Store
