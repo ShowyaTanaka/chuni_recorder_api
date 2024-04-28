@@ -96,6 +96,11 @@ class AuthUserJWTOperateView(viewsets.GenericViewSet):
                     if self.request.user.chuni_user is not None
                     else None
                 ),
+                "chuni_user_id": (
+                    self.request.user.chuni_user.id
+                    if self.request.user.chuni_user is not None
+                    else None
+                ),
             }
         )
 

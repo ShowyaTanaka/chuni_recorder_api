@@ -180,7 +180,7 @@ class AuthUserTest(unittest.TestCase):
                 "/auth/my_status/", headers={"Token": response.json().get("token")}
             )
             self.assertEqual(
-                response.json(), {"user_name": "test", "chuni_player_name": None}
+                response.json(), {"user_name": "test", "chuni_player_name": None, "chuni_user_id": None}
             )
         with self.subTest("トークンが存在しない場合,エラーを返す"):
             client = Client()
@@ -208,7 +208,7 @@ class AuthUserTest(unittest.TestCase):
             )
             self.assertEqual(
                 response.json(),
-                {"user_name": "test", "chuni_player_name": "test_chuni_user"},
+                {"user_name": "test", "chuni_player_name": "test_chuni_user", "chuni_user_id": 1},
             )
 
     @pytest.mark.django_db
