@@ -12,7 +12,6 @@ djangorestframework-jwt = "*"
 pyjwt = "*"
 setuptools = "*"
 django-filter = "*"
-pytest-json-fixtures = "*"
 pandas = "*"
 
 [dev-packages]
