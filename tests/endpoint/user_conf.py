@@ -24,7 +24,6 @@ class UserConfTest(unittest.TestCase):
             response = client.post(
                 "/user_conf/new/", {"user_name": "test", "password": "#$DFG1234"}
             )
-            print(response.json())
 
             self.assertEqual(response.status_code, 201)
             self.assertEqual(UserEx.objects.filter(name="test").exists(), True)

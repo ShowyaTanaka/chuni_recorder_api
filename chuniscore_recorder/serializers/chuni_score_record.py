@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from django.db import transaction
 from rest_framework import serializers
 from chuniscore_recorder.models import ChuniDifficulty, ChuniResult
+from chuniscore_recorder.models.proxy.chuniresultex import ChuniResultEx
 
 
 class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
@@ -39,11 +40,7 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
             return value
 
         def validate_difficulty(self, value):
-            if (
-                not self.context["difficulty"]
-                .filter(chuni_difficulty_rank=value)
-                .exists()
-            ):
+            if not self.context["difficulty"].filter(difficulty_rank=value).exists():
                 raise serializers.ValidationError("難易度が不正です")
             return value
 
@@ -71,11 +68,8 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
             .all()
         )
         result_list = []
-        music_id_list = [score["music_id"] for score in validated_data["score_list"]]
-        results = (
-            ChuniResult.objects.filter(music_difficulty__music_id__in=music_id_list)
-            .group_by("music_difficulty__music")
-            .latest("play_time")
+        results = ChuniResultEx.get_queryset_for_chuni_user_latest_time(
+            self.context["user"].chuni_user_id
         )
         for score in validated_data["score_list"]:
             try:
@@ -93,12 +87,21 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
                 if result.score <= score["score"]:
                     result_list.append(
                         ChuniResult(
-                            user=self.context["request"].user,
+                            chuni_user=self.context["user"].chuni_user,
                             music_difficulty=music_difficulty,
-                            score=score["score"],
+                            score=int(score["score"]),
                             registered_time=datetime.now(timezone.utc),
                         )
                     )
+            else:
+                result_list.append(
+                    ChuniResult(
+                        chuni_user=self.context["user"].chuni_user,
+                        music_difficulty=music_difficulty,
+                        score=int(score["score"]),
+                        registered_time=datetime.now(timezone.utc),
+                    )
+                )
         ChuniResult.objects.bulk_create(result_list)
         return validated_data
 
@@ -107,11 +110,11 @@ class ChuniScoreRecordListSerializer(serializers.ModelSerializer):
     music_id = serializers.IntegerField(
         help_text="曲ID", source="music_difficulty.music_id"
     )
-    difficulty = serializers.SerializerMethodField(
-        help_text="難易度", method_name="get_difficulty"
+    difficulty = serializers.CharField(
+        help_text="難易度", source="music_difficulty.difficulty_rank.difficulty_rank"
     )
-    music_title = serializers.SerializerMethodField(
-        help_text="曲名", method_name="get_music_title"
+    music_title = serializers.CharField(
+        help_text="曲名", source="music_difficulty.music.title"
     )
     constant = serializers.CharField(
         help_text="定数", source="music_difficulty.constant"
@@ -129,9 +132,3 @@ class ChuniScoreRecordListSerializer(serializers.ModelSerializer):
             "registered_time",
             "constant",
         ]
-
-    def get_difficulty(self, obj):
-        return obj.music_difficulty.difficulty_rank.difficulty_rank
-
-    def get_music_title(self, obj):
-        return obj.music_difficulty.music.title

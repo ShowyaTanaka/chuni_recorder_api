@@ -1,3 +1,4 @@
 [
-  {"model": "chuniscore_recorder.user", "pk": 1, "fields": {"name": "user1", "password": "Test", "chuni_user_id": 1}}
+  {"model": "chuniscore_recorder.user", "pk": 1, "fields": {"name": "user1", "password": "Test", "chuni_user_id": 1}},
+  {"model": "chuniscore_recorder.user", "pk": 2, "fields": {"name": "user2", "password": "Test", "chuni_user_id": 2}}
 ]
