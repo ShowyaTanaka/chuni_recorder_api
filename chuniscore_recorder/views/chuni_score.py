@@ -2,7 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from chuniscore_recorder.models import ChuniMusic, ChuniResult, ChuniDifficultyRank
+from chuniscore_recorder.models import ChuniMusic, ChuniResult, ChuniDifficultyRank, ChuniUser
 from chuniscore_recorder.models.proxy.chuniresultex import ChuniResultEx
 from chuniscore_recorder.serializers import (
     ChuniScoreRecordRegisterSerializer,
@@ -51,5 +51,10 @@ class ChuniScoreGetViewSet(viewsets.GenericViewSet):
     def get_score(self, _, pk=None):
         if pk is None:
             return Response({"detail": "ユーザー名が入力されていません。"}, status=400)
+        if int(pk) > ChuniUser.objects.count():
+            return Response({"detail": "ユーザーIDが不正です。"}, status=400)
         serializer = self.get_serializer(self.get_queryset(), many=True)
-        return Response(serializer.data)
+        return_dict = dict()
+        return_dict["result"] = serializer.data
+        return_dict["player_name"] = ChuniUser.objects.get(pk=pk).player_name
+        return Response(return_dict)
