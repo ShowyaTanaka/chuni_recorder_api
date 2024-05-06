@@ -13,6 +13,7 @@ pyjwt = "*"
 setuptools = "*"
 django-filter = "*"
 pytest-json-fixtures = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pytest = "*"
