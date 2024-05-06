@@ -13,6 +13,9 @@ pyjwt = "*"
 setuptools = "*"
 django-filter = "*"
 pandas = "*"
+pytest-json-fixtures = "*"
+django-cors-headers = "*"
+
 
 [dev-packages]
 pytest = "*"
