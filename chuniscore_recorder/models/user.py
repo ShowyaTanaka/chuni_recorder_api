@@ -14,6 +14,7 @@ class User(models.Model):
     )
     current_refresh_token = models.CharField(max_length=255, null=True, blank=True)
     refresh_token_updated_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "users"

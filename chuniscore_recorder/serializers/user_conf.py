@@ -37,7 +37,7 @@ class CreateUserSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         token = AuthUtilEx.create_token(instance.name)
-        return {"token": token.decode()}
+        return {"token": token.decode(), "contain_chuni_user": False}
 
     def create(self, validated_data):
         user = UserEx.create_user(

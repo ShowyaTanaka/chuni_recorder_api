@@ -16,8 +16,7 @@ class AuthUserLoginView(viewsets.GenericViewSet):
     @action(methods=["post"], detail=False)
     def create_user(self, request, *args, **kwargs):
         serializer = TokenObtainPairSerializerForUser(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
         user = serializer.save()
         response = Response(serializer.data)
         token = UserEx.create_refresh_token(user)
@@ -42,7 +41,7 @@ class AuthUserLoginView(viewsets.GenericViewSet):
             )
         token = AuthUtilEx.create_token(user.name)
         refresh_token = UserEx.create_refresh_token(user)
-        response = Response({"token": token, "user_name": user.name})
+        response = Response({"token": token, "user_name": user.name, "contain_chuni_user": user.chuni_user is not None})
         response.set_cookie(
             "refresh_token", refresh_token, httponly=True, max_age=60 * 60 * 24 * 14
         )
@@ -88,6 +87,7 @@ class AuthUserJWTOperateView(viewsets.GenericViewSet):
 
     @action(methods=["get"], detail=False)
     def my_status(self, request, *args, **kwargs):
+        print(self.request.user.player_name)
         return Response(
             {
                 "user_name": self.request.user.name,
@@ -123,6 +123,7 @@ class AuthUserJWTRefreshView(viewsets.GenericViewSet):
             return Response(
                 {"detail": "Token is invalid."}, status=status.HTTP_403_FORBIDDEN
             )
+        print(user.refresh_token_updated_at + settings.REFRESH_TOKEN_LIFETIME)
         if (
             user.refresh_token_updated_at + settings.REFRESH_TOKEN_LIFETIME
             < datetime.now(timezone.utc)

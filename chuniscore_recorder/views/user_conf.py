@@ -32,8 +32,7 @@ class UserConfigModifyViewSet(viewsets.GenericViewSet):
     @action(methods=["post"], detail=False)
     def new_chuni_user(self, request):
         serializer = self.get_serializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=200)
 
