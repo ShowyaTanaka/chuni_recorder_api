@@ -31,25 +31,28 @@ class ChuniScoreTest(TestCase):
     def test_chuni_score_list(self):
         with self.subTest("IDをつけて検索した際,そのIDのリザルト一覧を取得できる。"):
             client = Client()
-            response = client.get("/chuni_score/1/get_score/")
+            response = client.get("/chuni_score/get_score/user1/")
             self.assertEqual(response.status_code, 200)
             self.assertEqual(
-                [
-                    {
-                        "difficulty": "MASTER",
-                        "music_title": "Ultimate Force",
-                        "score": 965000,
-                        "constant": "15.0",
-                        "registered_time": "2024-04-26T20:00:00Z",
-                    },
-                    {
-                        "difficulty": "MASTER",
-                        "music_title": "Aleph-0",
-                        "score": 975000,
-                        "constant": "15.0",
-                        "registered_time": "2024-04-25T20:00:00Z",
-                    },
-                ],
+                {
+                    "result": [
+                        {
+                            "difficulty": "MASTER",
+                            "music_title": "Ultimate Force",
+                            "score": 965000,
+                            "constant": "15.0",
+                            "registered_time": "2024-04-26T20:00:00Z",
+                        },
+                        {
+                            "difficulty": "MASTER",
+                            "music_title": "Aleph-0",
+                            "score": 975000,
+                            "constant": "15.0",
+                            "registered_time": "2024-04-25T20:00:00Z",
+                        },
+                    ],
+                    "player_name": "user1",
+                },
                 response.json(),
             )
 

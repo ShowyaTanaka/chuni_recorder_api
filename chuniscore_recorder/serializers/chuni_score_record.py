@@ -69,7 +69,7 @@ class ChuniScoreRecordRegisterSerializer(serializers.Serializer):
         )
         result_list = []
         results = ChuniResultEx.get_queryset_for_chuni_user_latest_time(
-            self.context["user"].chuni_user_id
+            self.context["user"].name
         )
         for score in validated_data["score_list"]:
             try:

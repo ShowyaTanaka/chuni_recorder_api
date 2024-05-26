@@ -1,6 +1,6 @@
 from django.db.models import OuterRef, Subquery, Max
 from django.db import transaction
-from chuniscore_recorder.models import ChuniResult
+from chuniscore_recorder.models import ChuniResult, ChuniUser
 
 
 class ChuniResultEx(ChuniResult):
@@ -9,8 +9,9 @@ class ChuniResultEx(ChuniResult):
 
     @classmethod
     @transaction.atomic
-    def get_queryset_for_chuni_user_latest_time(cls, chuni_user_id: str):
+    def get_queryset_for_chuni_user_latest_time(cls, user_name: str):
         results = ChuniResult.objects.all()
+        chuni_user_id = ChuniUser.objects.get(user_chuni_user__name=user_name).id
         result_subqs = (
             results.filter(
                 chuni_user_id=chuni_user_id,

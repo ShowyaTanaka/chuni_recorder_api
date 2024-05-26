@@ -41,7 +41,13 @@ class AuthUserLoginView(viewsets.GenericViewSet):
             )
         token = AuthUtilEx.create_token(user.name)
         refresh_token = UserEx.create_refresh_token(user)
-        response = Response({"token": token, "user_name": user.name, "contain_chuni_user": user.chuni_user is not None})
+        response = Response(
+            {
+                "token": token,
+                "user_name": user.name,
+                "contain_chuni_user": user.chuni_user is not None,
+            }
+        )
         response.set_cookie(
             "refresh_token", refresh_token, httponly=True, max_age=60 * 60 * 24 * 14
         )
@@ -54,18 +60,29 @@ class AuthUserCheckView(APIView):
 
     def get(self, request, *args, **kwargs):
         token = request.headers.get("Token")
-        if token is None:
-            return Response({"is_authenticated": False})
-        try:
-            payload = jwt.decode(
-                jwt=str(token), key=settings.SECRET_KEY, algorithms=["HS256"]
-            )
-        except jwt.DecodeError:
-            return Response({"is_authenticated": False})
-        until = datetime.fromtimestamp(payload["until"])
-        if until < datetime.now():
-            return Response({"is_authenticated": False})
-        return Response({"is_authenticated": True})
+        cookie = request.COOKIES.get("refresh_token")
+        auth_status = {"refresh_token_valid": False, "token_status": False}
+        if cookie is not None:
+            user = UserEx.objects.filter(
+                name=request.headers.get("user_name"), current_refresh_token=token
+            ).first()
+            if user is not None and (
+                user.refresh_token_updated_at + settings.REFRESH_TOKEN_LIFETIME
+                > datetime.now(timezone.utc)
+            ):
+                auth_status["refresh_token_valid"] = True
+        if token is not None:
+            try:
+                payload = jwt.decode(
+                    jwt=str(token), key=settings.SECRET_KEY, algorithms=["HS256"]
+                )
+                until = datetime.fromtimestamp(payload["until"])
+                if until > datetime.now():
+                    auth_status["token_status"] = True
+            except jwt.DecodeError:
+                pass
+
+        return Response(auth_status)
 
 
 class AuthUserJWTOperateView(viewsets.GenericViewSet):
@@ -123,7 +140,6 @@ class AuthUserJWTRefreshView(viewsets.GenericViewSet):
             return Response(
                 {"detail": "Token is invalid."}, status=status.HTTP_403_FORBIDDEN
             )
-        print(user.refresh_token_updated_at + settings.REFRESH_TOKEN_LIFETIME)
         if (
             user.refresh_token_updated_at + settings.REFRESH_TOKEN_LIFETIME
             < datetime.now(timezone.utc)
