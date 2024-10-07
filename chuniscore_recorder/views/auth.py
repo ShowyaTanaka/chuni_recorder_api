@@ -62,6 +62,7 @@ class AuthUserCheckView(APIView):
         token = request.headers.get("Token")
         cookie = request.COOKIES.get("refresh_token")
         auth_status = {"refresh_token_valid": False, "token_status": False}
+        print("AA")
         if cookie is not None:
             user = UserEx.objects.filter(
                 name=request.headers.get("user_name"), current_refresh_token=token
@@ -104,7 +105,8 @@ class AuthUserJWTOperateView(viewsets.GenericViewSet):
 
     @action(methods=["get"], detail=False)
     def my_status(self, request, *args, **kwargs):
-        print(self.request.user.player_name)
+        print(self.request.user.name)
+        return 400
         return Response(
             {
                 "user_name": self.request.user.name,
